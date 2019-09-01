@@ -13,6 +13,7 @@ interface IState {
     yScale: number,
     yOffset: number;
     points: IPoint[];
+    pointBeingDragged: IPoint;
 }
 
 interface IPoint {
@@ -31,6 +32,7 @@ const state: IState = {
     yScale: 1,
     yOffset: 0,
     points: [],
+    pointBeingDragged: undefined,
 };
 
 type NumOrArr = number | number[];
@@ -42,7 +44,7 @@ const axisCutoff = 25;
 const tickHeight = 8;
 const plotColour = '#bc5090';
 const pointColour = '#ffa600';
-const pointRadius = 8;
+const pointRadius = 10;
 
 function drawAxes() {
     const ctx = state.ctx;
@@ -112,7 +114,9 @@ function drawPlot() {
 
 function drawPoints() {
     const ctx = state.ctx;
-    for (const point of state.points) {
+
+    for (const point of [...state.points, state.pointBeingDragged]) {
+        if (!point) continue;
         ctx.beginPath();
         const {x, y} = toScreenSpace(point.x, point.y) as IPoint;
         ctx.arc(x, y, pointRadius, 0, 2 * Math.PI);
@@ -173,15 +177,39 @@ function start() {
     requestAnimationFrame(drawFrame);
 }
 
-function handleClick(ev: MouseEvent) {
-    const point = fromScreenSpace(ev.clientX - pointRadius, ev.clientY - pointRadius) as IPoint;
-    state.points.push(point);
+function handleMouseDown(ev: MouseEvent) {
+    const pointCentre = fromScreenSpace(ev.clientX - pointRadius, ev.clientY - pointRadius) as IPoint;
+    const point = state.points.find((point: IPoint) =>
+        Math.abs(point.x - pointCentre.x) <= pointRadius/state.xScale
+        && Math.abs(point.y - pointCentre.y) <= pointRadius/state.yScale);
+
+    if (point) {
+        state.pointBeingDragged = point;
+        state.points = state.points.filter((p: IPoint) => p !== point);
+    } else {
+        state.points.push(pointCentre);
+    }
+}
+
+function handleMouseMove(ev: MouseEvent) {
+    if (!state.pointBeingDragged) return;
+
+    state.pointBeingDragged = fromScreenSpace(ev.clientX - pointRadius, ev.clientY - pointRadius) as IPoint;
+}
+
+function handleMouseUp(ev: MouseEvent) {
+    if (!state.pointBeingDragged) return;
+
+    state.points.push(state.pointBeingDragged);
+    state.pointBeingDragged = undefined;
 }
 
 function hookEventListeners() {
     const maxYInput = <HTMLInputElement>document.getElementById('maxY');
     maxYInput.oninput = ((ev: Event) => state.maxY = Number((ev.target as HTMLInputElement).value));
-    state.canvas.onclick = handleClick;
+    state.canvas.onmousedown = handleMouseDown;
+    state.canvas.onmousemove = handleMouseMove;
+    state.canvas.onmouseup = handleMouseUp;
 }
 
 window.onload = start;
