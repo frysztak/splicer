@@ -8,7 +8,7 @@ export class Segment {
     c: IPoint;
     d: IPoint;
 
-    constructor(points: SegmentPoints, alpha: number = 0.5, tension: number = 0) {
+    constructor(points: SegmentPoints, tension: number = 0, alpha: number = 0.5) {
         const p0 = points[0], p1 = points[1], p2 = points[2], p3 = points[3];
 
         const t01 = Math.pow(this.distance(p0, p1), alpha);

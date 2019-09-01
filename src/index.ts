@@ -18,6 +18,7 @@ const state: IState = {
     points: [],
     pointIdxBeingDragged: undefined,
     segments: [],
+    tension: 0,
     config: {
         margin: 45,
         arrowOffset: 8,
@@ -89,6 +90,11 @@ function handleMouseUp(ev: MouseEvent) {
     updateSegments();
 }
 
+function handleTensionChange(ev: Event) {
+    state.tension = Number((ev.target as HTMLInputElement).value);
+    updateSegments();
+}
+
 function updateSegments() {
     const points = state.points;
     if (points.length < 4) return;
@@ -99,7 +105,7 @@ function updateSegments() {
         chunks.push(points.slice(i-stride, i+1) as SegmentPoints);
     }
 
-    state.segments = chunks.map((chunk: SegmentPoints) => new Segment(chunk));
+    state.segments = chunks.map((chunk: SegmentPoints) => new Segment(chunk, state.tension));
 }
 
 function drawSegments() {
@@ -117,6 +123,8 @@ function drawSegments() {
 function hookEventListeners() {
     const maxYInput = <HTMLInputElement>document.getElementById('maxY');
     maxYInput.oninput = ((ev: Event) => state.maxY = Number((ev.target as HTMLInputElement).value));
+    const tensionInput = <HTMLInputElement>document.getElementById('tension');
+    tensionInput.oninput = handleTensionChange;
     state.canvas.onmousedown = handleMouseDown;
     state.canvas.onmousemove = handleMouseMove;
     state.canvas.onmouseup = handleMouseUp;

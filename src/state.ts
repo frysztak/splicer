@@ -15,6 +15,7 @@ export interface IState {
     points: IPoint[];
     pointIdxBeingDragged: number;
     segments: Segment[];
+    tension: number;
 }
 
 export interface IConfig {
