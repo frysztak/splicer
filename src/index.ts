@@ -24,9 +24,10 @@ const state: IState = {
         arrowLength: 8 / Math.sqrt(2),
         axisCutoff: 25,
         tickHeight: 8,
-        plotColour: '#bc5090',
-        pointColour: '#ffa600',
-        pointRadius: 10,
+        lineColour: '#bc5090',
+        pointColour: '#82929f78',
+        foregroundColour: '#cecccc',
+        pointRadius: 14,
     }
 };
 
@@ -62,8 +63,8 @@ function handleMouseDown(ev: MouseEvent) {
     const r = state.config.pointRadius;
     const pointCentre = fromScreenSpace(state, ev.clientX - r, ev.clientY - r) as IPoint;
     const pointIdx = state.points.findIndex((point: IPoint) =>
-        Math.abs(point.x - pointCentre.x) <= r / state.xScale
-        && Math.abs(point.y - pointCentre.y) <= r / state.yScale);
+        Math.abs(point.x - pointCentre.x) <= 1.25 * r / state.xScale
+        && Math.abs(point.y - pointCentre.y) <= 1.25 * r / state.yScale);
 
     if (pointIdx !== -1) {
         state.pointIdxBeingDragged = pointIdx;

@@ -1,6 +1,6 @@
 import {IState} from "./state";
 import zip from "lodash/zip";
-import {IPoint} from "./point";
+import {IPoint, IPointList} from "./point";
 
 type NumOrArr = number | number[];
 
@@ -12,6 +12,8 @@ export function drawAxes(state: IState) {
     // x axis
     const y = state.canvas.height - cfg.margin;
     const finalX = state.canvas.width - cfg.margin;
+    ctx.strokeStyle = cfg.foregroundColour;
+    ctx.fillStyle = cfg.foregroundColour;
     ctx.beginPath();
     ctx.moveTo(cfg.margin, y);
     ctx.lineTo(finalX, y);
@@ -19,10 +21,10 @@ export function drawAxes(state: IState) {
     ctx.moveTo(finalX, y);
     ctx.lineTo(finalX - cfg.arrowOffset, y + cfg.arrowOffset);
     ctx.stroke();
-    ctx.font = "normal bold 20px sans-serif";
+    ctx.font = "normal bold 20px 'Calibri', sans-serif";
     ctx.fillText('t', finalX - cfg.arrowOffset, y + 4 * cfg.arrowOffset);
     // tick
-    ctx.font = "normal normal 16px sans-serif";
+    ctx.font = "normal normal 16px 'Calibri', sans-serif";
     ctx.textAlign = "center";
     ctx.fillText('1', finalX - cfg.arrowOffset - cfg.axisCutoff, y + 4 * cfg.arrowOffset);
     ctx.moveTo(finalX - cfg.arrowOffset - cfg.axisCutoff, y);
@@ -39,10 +41,10 @@ export function drawAxes(state: IState) {
     ctx.moveTo(cfg.margin, cfg.margin);
     ctx.lineTo(cfg.margin + cfg.arrowOffset, cfg.margin + cfg.arrowOffset);
     ctx.stroke();
-    ctx.font = "normal bold 20px sans-serif";
+    ctx.font = "normal bold 20px 'Calibri', sans-serif";
     ctx.fillText('y', cfg.margin - 4 * cfg.arrowOffset, cfg.margin + cfg.arrowOffset);
     // tick
-    ctx.font = "normal normal 16px sans-serif";
+    ctx.font = "normal normal 16px 'Calibri', sans-serif";
     ctx.textBaseline = "middle";
     ctx.fillText(state.maxY.toFixed(1), cfg.margin - 4 * cfg.arrowOffset, cfg.margin + cfg.arrowOffset + cfg.axisCutoff);
     ctx.moveTo(cfg.margin, cfg.margin + cfg.arrowOffset + cfg.axisCutoff);
@@ -52,12 +54,12 @@ export function drawAxes(state: IState) {
 
 export function drawPlot(state: IState) {
     const ctx = state.ctx;
-    const {x, y} = toScreenSpace(state, state.x, state.y) as { x: number[], y: number[] };
+    const {x, y} = toScreenSpace(state, state.x, state.y) as IPointList;
 
     ctx.moveTo(x[0], y[0]);
     ctx.beginPath();
-    ctx.strokeStyle = state.config.plotColour;
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = state.config.lineColour;
+    ctx.lineWidth = 2.5;
     for (const [x_, y_] of zip(x, y)) {
         ctx.lineTo(x_, y_);
     }

@@ -23,7 +23,8 @@ export interface IConfig {
     arrowLength: number;
     axisCutoff: number;
     tickHeight: number;
-    plotColour: string;
+    lineColour: string;
     pointColour: string;
+    foregroundColour: string;
     pointRadius: number;
 }
