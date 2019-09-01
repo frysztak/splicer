@@ -2,28 +2,51 @@ body {
     font-family: 'Calibri', sans-serif;
     background-color: #231f22;
     color: #cecccc;
-    font-size: 18px;
 }
 
-.container {
+label {
+    font-size: 20px;
+}
+
+.row {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
-.item {
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
 
+.double-column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 2;
 }
 
 #plot {
-    width: 600px;
-    height: 500px;
+    width: 70vw;
+    height: 70vh;
+}
+
+.controls-container {
+    max-width: 350px;
 }
 
 .mt-50 {
     margin-top: 50px;
 }
 
+.mt-10 {
+    margin-top: 10px;
+}
+
 .center-vertical {
-    display: flex;
     align-items: center;
 }
 
