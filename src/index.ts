@@ -1,6 +1,8 @@
 import range from 'lodash/range';
 import zip from 'lodash/zip';
 import max from 'lodash/max'
+import {IPoint} from "./point";
+import {Segment, SegmentPoints} from "./segment";
 
 interface IState {
     canvas: HTMLCanvasElement;
@@ -14,19 +16,7 @@ interface IState {
     yOffset: number;
     points: IPoint[];
     pointIdxBeingDragged: number;
-    segments: ISegment[];
-}
-
-interface IPoint {
-    x: number,
-    y: number,
-}
-
-interface ISegment {
-    a: IPoint;
-    b: IPoint;
-    c: IPoint;
-    d: IPoint;
+    segments: Segment[];
 }
 
 const state: IState = {
@@ -218,45 +208,13 @@ function updateSegments() {
     const points = state.points;
     if (points.length < 4) return;
 
-    const chunks: IPoint[][] = [];
+    const chunks: SegmentPoints[] = [];
     const stride = 3;
-    for (let i = 3; i < points.length; i++) {
-        chunks.push(points.slice(i-stride, i+1));
+    for (let i = stride; i < points.length; i++) {
+        chunks.push(points.slice(i-stride, i+1) as SegmentPoints);
     }
 
-    state.segments = chunks.map((chunk: IPoint[]) => createSegment(chunk));
-}
-
-function createSegment(points: IPoint[]): ISegment {
-    const distance = (p1: IPoint, p2: IPoint) => Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-    const p0 = points[0], p1 = points[1], p2 = points[2], p3 = points[3];
-    const alpha = 0.5;
-    const tension = 0;
-
-    const t01 = Math.pow(distance(p0, p1), alpha);
-    const t12 = Math.pow(distance(p1, p2), alpha);
-    const t23 = Math.pow(distance(p2, p3), alpha);
-    const m1: IPoint = {
-        x: (1.0 - tension) * (p2.x - p1.x + t12 * ((p1.x - p0.x) / t01 - (p2.x - p0.x) / (t01 + t12))),
-        y: (1.0 - tension) * (p2.y - p1.y + t12 * ((p1.y - p0.y) / t01 - (p2.y - p0.y) / (t01 + t12))),
-    };
-    const m2: IPoint = {
-        x: (1.0 - tension) * (p2.x - p1.x + t12 * ((p3.x - p2.x) / t23 - (p3.x - p1.x) / (t12 + t23))),
-        y: (1.0 - tension) * (p2.y - p1.y + t12 * ((p3.y - p2.y) / t23 - (p3.y - p1.y) / (t12 + t23))),
-    };
-
-    return {
-        a: {
-            x: 2.0 * (p1.x - p2.x) + m1.x + m2.x,
-            y: 2.0 * (p1.y - p2.y) + m1.y + m2.y,
-        },
-        b: {
-            x: -3.0 * (p1.x - p2.x) - m1.x - m1.x - m2.x,
-            y: -3.0 * (p1.y - p2.y) - m1.y - m1.y - m2.y,
-        },
-        c: m1,
-        d: p1,
-    };
+    state.segments = chunks.map((chunk: SegmentPoints) => new Segment(chunk));
 }
 
 function drawSegments() {
@@ -265,8 +223,9 @@ function drawSegments() {
     state.x = state.y = [];
     const t = range(0, 1, 0.01);
     for (const segment of state.segments) {
-        state.x = state.x.concat(t.map(t_ => segment.a.x * Math.pow(t_, 3) + segment.b.x * Math.pow(t_, 2) + segment.c.x * t_ + segment.d.x));
-        state.y = state.y.concat(t.map(t_ => segment.a.y * Math.pow(t_, 3) + segment.b.y * Math.pow(t_, 2) + segment.c.y * t_ + segment.d.y));
+        const {x, y} = segment.evaluate(t);
+        state.x = state.x.concat(x);
+        state.y = state.y.concat(y);
     }
 }
 
