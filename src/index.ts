@@ -1,23 +1,9 @@
 import range from 'lodash/range';
-import zip from 'lodash/zip';
 import max from 'lodash/max'
 import {IPoint} from "./point";
 import {Segment, SegmentPoints} from "./segment";
-
-interface IState {
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
-    x: number[];
-    y: number[];
-    maxY: number;
-    xScale: number,
-    xOffset: number;
-    yScale: number,
-    yOffset: number;
-    points: IPoint[];
-    pointIdxBeingDragged: number;
-    segments: Segment[];
-}
+import {IState} from "./state";
+import {drawAxes, drawPlot, drawPoints, fromScreenSpace} from "./drawing";
 
 const state: IState = {
     ctx: undefined,
@@ -32,144 +18,40 @@ const state: IState = {
     points: [],
     pointIdxBeingDragged: undefined,
     segments: [],
+    config: {
+        margin: 45,
+        arrowOffset: 8,
+        arrowLength: 8 / Math.sqrt(2),
+        axisCutoff: 25,
+        tickHeight: 8,
+        plotColour: '#bc5090',
+        pointColour: '#ffa600',
+        pointRadius: 10,
+    }
 };
 
-type NumOrArr = number | number[];
-
-const margin = 45;
-const arrowOffset = 8;
-const arrowLength = arrowOffset / Math.sqrt(2);
-const axisCutoff = 25;
-const tickHeight = 8;
-const plotColour = '#bc5090';
-const pointColour = '#ffa600';
-const pointRadius = 10;
-
-function drawAxes() {
-    const ctx = state.ctx;
-    // x axis
-    const y = state.canvas.height - margin;
-    const finalX = state.canvas.width - margin;
-    ctx.beginPath();
-    ctx.moveTo(margin, y);
-    ctx.lineTo(finalX, y);
-    ctx.lineTo(finalX - arrowOffset, y - arrowOffset);
-    ctx.moveTo(finalX, y);
-    ctx.lineTo(finalX - arrowOffset, y + arrowOffset);
-    ctx.stroke();
-    ctx.font = "normal bold 20px sans-serif";
-    ctx.fillText('t', finalX - arrowOffset, y + 4 * arrowOffset);
-    // tick
-    ctx.font = "normal normal 16px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText('1', finalX - arrowOffset - axisCutoff, y + 4 * arrowOffset);
-    ctx.moveTo(finalX - arrowOffset - axisCutoff, y);
-    ctx.lineTo(finalX - arrowOffset - axisCutoff, y + tickHeight);
-    ctx.stroke();
-
-    // y axis
-    const finalY = state.canvas.height - margin;
-    ctx.beginPath();
-    ctx.lineWidth = 1;
-    ctx.moveTo(margin, finalY);
-    ctx.lineTo(margin, margin);
-    ctx.lineTo(margin - arrowOffset, margin + arrowOffset);
-    ctx.moveTo(margin, margin);
-    ctx.lineTo(margin + arrowOffset, margin + arrowOffset);
-    ctx.stroke();
-    ctx.font = "normal bold 20px sans-serif";
-    ctx.fillText('y', margin - 4 * arrowOffset, margin + arrowOffset);
-    // tick
-    ctx.font = "normal normal 16px sans-serif";
-    ctx.textBaseline = "middle";
-    ctx.fillText(state.maxY.toFixed(1), margin - 4 * arrowOffset, margin + arrowOffset + axisCutoff);
-    ctx.moveTo(margin, margin + arrowOffset + axisCutoff);
-    ctx.lineTo(margin - tickHeight, margin + arrowOffset + axisCutoff);
-    ctx.stroke();
-}
-
 function updateScale() {
-    const width = state.canvas.width - 2 * margin - axisCutoff - arrowLength;
-    const height = state.canvas.height - 2 * margin - axisCutoff - arrowLength;
+    const cfg =  state.config;
+    const width = state.canvas.width - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
+    const height = state.canvas.height - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
     state.xScale = width / max([max(state.x), 1.0]);
-    state.xOffset = margin;
+    state.xOffset = cfg.margin;
     state.yScale = height / state.maxY;
-    state.yOffset = height + margin + axisCutoff + arrowLength;
-}
-
-function drawPlot() {
-    const ctx = state.ctx;
-    const {x, y} = toScreenSpace(state.x, state.y) as { x: number[], y: number[] };
-
-    ctx.moveTo(x[0], y[0]);
-    ctx.beginPath();
-    ctx.strokeStyle = plotColour;
-    ctx.lineWidth = 2;
-    for (const [x_, y_] of zip(x, y)) {
-        ctx.lineTo(x_, y_);
-    }
-    ctx.stroke();
-}
-
-function drawPoints() {
-    const ctx = state.ctx;
-
-    for (const point of state.points) {
-        ctx.beginPath();
-        const {x, y} = toScreenSpace(point.x, point.y) as IPoint;
-        ctx.arc(x, y, pointRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = pointColour;
-        ctx.fill();
-    }
-}
-
-function toScreenSpace(x: NumOrArr, y: NumOrArr): { x: NumOrArr, y: NumOrArr } {
-    const mapX = (x: number) => state.xOffset + x * state.xScale;
-    const mapY = (y: number) => state.yOffset - y * state.yScale;
-
-    if (Array.isArray(x) && Array.isArray(y)) {
-        return {
-            x: x.map(mapX),
-            y: y.map(mapY),
-        };
-    } else if (typeof x === 'number' && typeof y === 'number')
-        return {
-            x: mapX(x),
-            y: mapY(y),
-        };
-}
-
-function fromScreenSpace(x: NumOrArr, y: NumOrArr): { x: NumOrArr, y: NumOrArr } {
-    const mapX = (x: number) => (x - state.xOffset) / state.xScale;
-    const mapY = (y: number) => -(y - state.yOffset) / state.yScale;
-
-    if (Array.isArray(x) && Array.isArray(y)) {
-        return {
-            x: x.map(mapX),
-            y: y.map(mapY),
-        };
-    } else if (typeof x === 'number' && typeof y === 'number')
-        return {
-            x: mapX(x),
-            y: mapY(y),
-        };
+    state.yOffset = height + cfg.margin + cfg.axisCutoff + cfg.arrowLength;
 }
 
 function drawFrame() {
     state.canvas.width = state.canvas.offsetWidth * window.devicePixelRatio;
     state.canvas.height = state.canvas.offsetHeight * window.devicePixelRatio;
     updateScale();
-    drawAxes();
+    drawAxes(state);
     drawSegments();
-    drawPlot();
-    drawPoints();
+    drawPlot(state);
+    drawPoints(state);
     requestAnimationFrame(drawFrame);
 }
 
 function start() {
-    state.x = range(0, 1, 0.01);
-    state.y = state.x.map(x => Math.sqrt(x));
-
     state.canvas = <HTMLCanvasElement>document.getElementById('plot');
     state.ctx = state.canvas.getContext('2d');
     hookEventListeners();
@@ -177,10 +59,11 @@ function start() {
 }
 
 function handleMouseDown(ev: MouseEvent) {
-    const pointCentre = fromScreenSpace(ev.clientX - pointRadius, ev.clientY - pointRadius) as IPoint;
+    const r = state.config.pointRadius;
+    const pointCentre = fromScreenSpace(state, ev.clientX - r, ev.clientY - r) as IPoint;
     const pointIdx = state.points.findIndex((point: IPoint) =>
-        Math.abs(point.x - pointCentre.x) <= pointRadius / state.xScale
-        && Math.abs(point.y - pointCentre.y) <= pointRadius / state.yScale);
+        Math.abs(point.x - pointCentre.x) <= r / state.xScale
+        && Math.abs(point.y - pointCentre.y) <= r / state.yScale);
 
     if (pointIdx !== -1) {
         state.pointIdxBeingDragged = pointIdx;
@@ -193,7 +76,8 @@ function handleMouseDown(ev: MouseEvent) {
 function handleMouseMove(ev: MouseEvent) {
     if (state.pointIdxBeingDragged === undefined) return;
 
-    state.points[state.pointIdxBeingDragged] = fromScreenSpace(ev.clientX - pointRadius, ev.clientY - pointRadius) as IPoint;
+    const r = state.config.pointRadius;
+    state.points[state.pointIdxBeingDragged] = fromScreenSpace(state, ev.clientX - r, ev.clientY - r) as IPoint;
     updateSegments();
 }
 
