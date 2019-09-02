@@ -14,6 +14,7 @@ export interface IState {
     yOffset: number;
     points: IPoint[];
     pointIdxBeingDragged: number;
+    pointIdxHoveredOn: number;
     segments: Segment[];
     segmentsElement: HTMLPreElement;
     tension: number;
@@ -27,6 +28,12 @@ export interface IConfig {
     tickHeight: number;
     lineColour: string;
     pointColour: string;
-    foregroundColour: string;
     pointRadius: number;
+    foregroundColour: string;
+    tooltipWidth: number;
+    tooltipHeight: number;
+    tooltipRadius: number;
+    tooltipMargin: number;
+    tooltipBackground: string;
+    tooltipForeground: string;
 }

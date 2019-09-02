@@ -78,6 +78,40 @@ export function drawPoints(state: IState) {
     }
 }
 
+function roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+    ctx.beginPath();
+    ctx.moveTo(x, y + radius);
+    ctx.lineTo(x, y + height - radius);
+    ctx.arcTo(x, y + height, x + radius, y + height, radius);
+    ctx.lineTo(x + width - radius, y + height);
+    ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
+    ctx.lineTo(x + width, y + radius);
+    ctx.arcTo(x + width, y, x + width - radius, y, radius);
+    ctx.lineTo(x + radius, y);
+    ctx.arcTo(x, y, x, y + radius, radius);
+    ctx.fill();
+}
+
+export function drawTooltip(state: IState, point: IPoint) {
+    const ctx = state.ctx;
+    const cfg = state.config;
+    ctx.fillStyle = cfg.tooltipBackground;
+
+    let {x, y} = toScreenSpace(state, point.x, point.y) as IPoint;
+    x -= cfg.tooltipWidth/2;
+    y -= cfg.pointRadius + cfg.tooltipMargin;
+    roundedRect(ctx, x, y, cfg.tooltipWidth, cfg.tooltipHeight, cfg.tooltipRadius);
+
+    const text = `(${point.x.toFixed(2)}, ${point.y.toFixed(2)})`;
+    x += cfg.tooltipWidth/2;
+    y = y + cfg.tooltipHeight/2;
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = cfg.tooltipForeground;
+    ctx.strokeStyle = cfg.tooltipForeground;
+    ctx.font = "normal normal 18px 'Calibri', sans-serif";
+    ctx.fillText(text, x, y);
+}
+
 export function toScreenSpace(state: IState, x: NumOrArr, y: NumOrArr): { x: NumOrArr, y: NumOrArr } {
     const mapX = (x: number) => state.xOffset + x * state.xScale;
     const mapY = (y: number) => state.yOffset - y * state.yScale;

@@ -3,7 +3,7 @@ import max from 'lodash/max'
 import {IPoint} from "./point";
 import {Segment, SegmentPoints} from "./segment";
 import {IState} from "./state";
-import {drawAxes, drawPlot, drawPoints, fromScreenSpace} from "./drawing";
+import {drawAxes, drawPlot, drawPoints, drawTooltip, fromScreenSpace} from "./drawing";
 
 const state: IState = {
     ctx: undefined,
@@ -16,7 +16,8 @@ const state: IState = {
     yScale: 1,
     yOffset: 0,
     points: [],
-    pointIdxBeingDragged: undefined,
+    pointIdxBeingDragged: -1,
+    pointIdxHoveredOn: -1,
     segments: [],
     tension: 0,
     segmentsElement: undefined,
@@ -28,8 +29,14 @@ const state: IState = {
         tickHeight: 8,
         lineColour: '#bc5090',
         pointColour: '#82929f78',
-        foregroundColour: '#cecccc',
         pointRadius: 14,
+        foregroundColour: '#cecccc',
+        tooltipWidth: 105,
+        tooltipHeight: 40,
+        tooltipRadius: 5,
+        tooltipMargin: 45,
+        tooltipBackground: '#e5cdc8',
+        tooltipForeground: '#913d88'
     }
 };
 
@@ -51,6 +58,9 @@ function drawFrame() {
     drawSegments();
     drawPlot(state);
     drawPoints(state);
+    if (state.pointIdxHoveredOn !== -1) {
+        drawTooltip(state, state.points[state.pointIdxHoveredOn]);
+    }
     requestAnimationFrame(drawFrame);
 }
 
@@ -61,12 +71,18 @@ function start() {
     requestAnimationFrame(drawFrame);
 }
 
-function handleMouseDown(ev: MouseEvent) {
+function findPoint(ev: MouseEvent): { pointIdx: number; pointCentre: IPoint } {
     const r = state.config.pointRadius;
     const pointCentre = fromScreenSpace(state, ev.clientX - r, ev.clientY - r) as IPoint;
-    const pointIdx = state.points.findIndex((point: IPoint) =>
+    const pointIdx =  state.points.findIndex((point: IPoint) =>
         Math.abs(point.x - pointCentre.x) <= 1.25 * r / state.xScale
         && Math.abs(point.y - pointCentre.y) <= 1.25 * r / state.yScale);
+
+    return {pointIdx, pointCentre};
+}
+
+function handleMouseDown(ev: MouseEvent) {
+    const {pointIdx, pointCentre} = findPoint(ev);
 
     if (pointIdx !== -1) {
         state.pointIdxBeingDragged = pointIdx;
@@ -77,11 +93,14 @@ function handleMouseDown(ev: MouseEvent) {
 }
 
 function handleMouseMove(ev: MouseEvent) {
-    if (state.pointIdxBeingDragged === undefined) return;
-
-    const r = state.config.pointRadius;
-    state.points[state.pointIdxBeingDragged] = fromScreenSpace(state, ev.clientX - r, ev.clientY - r) as IPoint;
-    updateSegments();
+    if (state.pointIdxBeingDragged === undefined) {
+        const {pointIdx, pointCentre} = findPoint(ev);
+        state.pointIdxHoveredOn = pointIdx;
+    } else {
+        const r = state.config.pointRadius;
+        state.points[state.pointIdxBeingDragged] = fromScreenSpace(state, ev.clientX - r, ev.clientY - r) as IPoint;
+        updateSegments();
+    }
 }
 
 function handleMouseUp(ev: MouseEvent) {
