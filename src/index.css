@@ -2,10 +2,7 @@ body {
     font-family: 'Calibri', sans-serif;
     background-color: #231f22;
     color: #cecccc;
-}
-
-label, .heading {
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 
 button {
@@ -18,7 +15,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 1rem;
     cursor: pointer;
 }
 
@@ -62,12 +59,16 @@ button:focus {
     max-width: 350px;
 }
 
-.mt-50 {
-    margin-top: 50px;
-}
-
 .mt-10 {
     margin-top: 10px;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
+.mt-50 {
+    margin-top: 50px;
 }
 
 .ml-10 {
@@ -108,6 +109,20 @@ footer {
     padding: 1rem;
     text-align: center;
     border-top: #bc5090 1px solid;
+    font-size: 0.85em;
+}
+
+ol {
+    padding-inline-start: 0;
+}
+
+ol, ol li {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+pre {
+    font-size: 1rem;
 }
 
 /* range slider */
