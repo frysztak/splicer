@@ -19,6 +19,7 @@ const state: IState = {
     pointIdxBeingDragged: undefined,
     segments: [],
     tension: 0,
+    segmentsElement: undefined,
     config: {
         margin: 45,
         arrowOffset: 8,
@@ -95,6 +96,12 @@ function handleTensionChange(ev: Event) {
     updateSegments();
 }
 
+function handleCopyClick() {
+    if (state.segments.length) {
+        navigator.clipboard.writeText(getSegmentsJSON());
+    }
+}
+
 function updateSegments() {
     const points = state.points;
     if (points.length < 4) return;
@@ -106,6 +113,11 @@ function updateSegments() {
     }
 
     state.segments = chunks.map((chunk: SegmentPoints) => new Segment(chunk, state.tension));
+    state.segmentsElement.innerText = getSegmentsJSON();
+}
+
+function getSegmentsJSON(): string {
+   return JSON.stringify(state.segments.map((segment: Segment) => segment.getCoefficients()), null, 2);
 }
 
 function drawSegments() {
@@ -121,10 +133,17 @@ function drawSegments() {
 }
 
 function hookEventListeners() {
-    const maxYInput = <HTMLInputElement>document.getElementById('maxY');
+    const maxYInput = document.getElementById('maxY') as HTMLInputElement;
     maxYInput.oninput = ((ev: Event) => state.maxY = Number((ev.target as HTMLInputElement).value));
-    const tensionInput = <HTMLInputElement>document.getElementById('tension');
+
+    const tensionInput = document.getElementById('tension') as HTMLInputElement;
     tensionInput.oninput = handleTensionChange;
+
+    state.segmentsElement = document.getElementById('segments') as HTMLPreElement;
+
+    const copyButton = document.getElementById('copy') as HTMLButtonElement;
+    copyButton.onclick = handleCopyClick;
+
     state.canvas.onmousedown = handleMouseDown;
     state.canvas.onmousemove = handleMouseMove;
     state.canvas.onmouseup = handleMouseUp;

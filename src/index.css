@@ -4,8 +4,28 @@ body {
     color: #cecccc;
 }
 
-label {
+label, .heading {
     font-size: 20px;
+}
+
+button {
+    margin-left: 10px;
+    padding: 0;
+    border: 0;
+    height: 26px;
+    background: #e5cdc8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+button:focus {
+    outline-color: #bc5090;
+}
+
+#segments {
+    font-family: monospace;
 }
 
 .row {
@@ -60,9 +80,9 @@ input[type=range].slider:focus {
 }
 input[type=range].slider::-webkit-slider-runnable-track {
     width: 100%;
-    height: 25.6px;
+    height: 26px;
     cursor: pointer;
-    background: #82929f;
+    background: #e5cdc8;
 }
 input[type=range].slider::-webkit-slider-thumb {
     height: 27px;
@@ -73,13 +93,13 @@ input[type=range].slider::-webkit-slider-thumb {
     margin-top: -0.7px;
 }
 input[type=range].slider:focus::-webkit-slider-runnable-track {
-    background: #82929f;
+    background: #e5cdc8;
 }
 input[type=range].slider::-moz-range-track {
     width: 100%;
-    height: 25.6px;
+    height: 26px;
     cursor: pointer;
-    background: #82929f;
+    background: #e5cdc8;
 }
 input[type=range].slider::-moz-range-thumb {
     height: 27px;
@@ -91,29 +111,28 @@ input[type=range].slider::-moz-range-thumb {
 }
 input[type=range].slider::-ms-track {
     width: 100%;
-    height: 25.6px;
+    height: 26px;
     cursor: pointer;
     background: transparent;
     border-color: transparent;
     color: transparent;
 }
 input[type=range].slider::-ms-fill-lower {
-    background: #82929f;
+    background: #e5cdc8;
 }
 input[type=range].slider::-ms-fill-upper {
-    background: #82929f;
+    background: #e5cdc8;
 }
 input[type=range].slider::-ms-thumb {
     width: 16px;
     background: rgba(188, 80, 144, 0.93);
     cursor: pointer;
-    height: 25.6px;
+    height: 27px;
 }
 input[type=range].slider:focus::-ms-fill-lower {
-    background: #82929f;
+    background: #e5cdc8;
 }
 input[type=range].slider:focus::-ms-fill-upper {
-    background: #82929f;
+    background: #e5cdc8;
 }
-
 

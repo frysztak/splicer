@@ -42,6 +42,10 @@ export class Segment {
         };
     }
 
+    getCoefficients() {
+        return {a: this.a, b: this.b, c: this.c, d: this.d};
+    }
+
     private distance(p1: IPoint, p2: IPoint): number {
         return Math.sqrt(
             Math.pow(p1.x - p2.x, 2)
