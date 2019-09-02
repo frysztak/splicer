@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "dev:watch": "webpack --mode development --watch",
-    "copy:static": "cpx src/*.{html,css,png,ico} dist/ --watch",
+    "copy:static": "cpx src/*.{html,css,png,ico} dist/",
+    "copy:static:watch": "cpx src/*.{html,css,png,ico} dist/ --watch",
     "serve": "http-server dist/ -s",
-    "start": "npm-run-all --parallel dev:watch copy:static serve",
-    "build": "webpack --mode production"
+    "start": "npm-run-all --parallel dev:watch copy:static:watch serve",
+    "prod": "webpack --mode production",
+    "build": "npm-run-all copy:static prod"
   },
   "keywords": [
     "catmull",
