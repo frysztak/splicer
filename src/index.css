@@ -27,7 +27,9 @@ button:focus {
 }
 
 #segments {
-    font-family: monospace;
+    max-height: 450px;
+    overflow-y: scroll;
+    width: 100%;
 }
 
 .row {
