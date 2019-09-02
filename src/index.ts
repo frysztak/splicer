@@ -15,6 +15,8 @@ const state: IState = {
     xOffset: 0,
     yScale: 1,
     yOffset: 0,
+    plotWidth: 0,
+    plotHeight: 0,
     points: [],
     pointIdxBeingDragged: -1,
     pointIdxHoveredOn: -1,

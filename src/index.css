@@ -70,8 +70,44 @@ button:focus {
     margin-top: 10px;
 }
 
+.ml-10 {
+    margin-left: 10px;
+}
+
 .center-vertical {
     align-items: center;
+}
+
+.align-left {
+    align-items: flex-start;
+}
+
+.align-right {
+    align-items: flex-end;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+a {
+    color: unset;
+    text-decoration: none;
+}
+
+footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    text-align: center;
+    border-top: #bc5090 1px solid;
 }
 
 /* range slider */
