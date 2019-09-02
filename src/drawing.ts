@@ -1,5 +1,6 @@
 import {IState} from "./state";
 import zip from "lodash/zip";
+import range from "lodash/range";
 import {IPoint, IPointList} from "./point";
 
 type NumOrArr = number | number[];
@@ -23,13 +24,7 @@ export function drawAxes(state: IState) {
     ctx.stroke();
     ctx.font = "normal bold 20px 'Calibri', sans-serif";
     ctx.fillText('t', finalX - cfg.arrowOffset, y + 4 * cfg.arrowOffset);
-    // tick
-    ctx.font = "normal normal 16px 'Calibri', sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText('1', finalX - cfg.arrowOffset - cfg.axisCutoff, y + 4 * cfg.arrowOffset);
-    ctx.moveTo(finalX - cfg.arrowOffset - cfg.axisCutoff, y);
-    ctx.lineTo(finalX - cfg.arrowOffset - cfg.axisCutoff, y + cfg.tickHeight);
-    ctx.stroke();
+    drawXTicks(state, y);
 
     // y axis
     const finalY = state.canvas.height - cfg.margin;
@@ -43,13 +38,48 @@ export function drawAxes(state: IState) {
     ctx.stroke();
     ctx.font = "normal bold 20px 'Calibri', sans-serif";
     ctx.fillText('y', cfg.margin - 4 * cfg.arrowOffset, cfg.margin + cfg.arrowOffset);
-    // tick
+    drawYTicks(state, cfg.margin);
+}
+
+function drawXTicks(state: IState, y: number) {
+    const ctx = state.ctx;
+    const cfg = state.config;
+
     ctx.font = "normal normal 16px 'Calibri', sans-serif";
-    ctx.textBaseline = "middle";
-    ctx.fillText(state.maxY.toFixed(1), cfg.margin - 4 * cfg.arrowOffset, cfg.margin + cfg.arrowOffset + cfg.axisCutoff);
-    ctx.moveTo(cfg.margin, cfg.margin + cfg.arrowOffset + cfg.axisCutoff);
-    ctx.lineTo(cfg.margin - cfg.tickHeight, cfg.margin + cfg.arrowOffset + cfg.axisCutoff);
-    ctx.stroke();
+    ctx.textAlign = "center";
+
+    let tickStep = 1/cfg.nTicks;
+    let ticks = range(0, 1+tickStep, tickStep);
+    let tickDistance = state.plotWidth / cfg.nTicks;
+    let x = cfg.margin;
+    for (const tick of ticks) {
+        ctx.fillText(tick.toFixed(2), x, y + 4 * cfg.arrowOffset);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + cfg.tickHeight);
+        ctx.stroke();
+        x += tickDistance;
+    }
+}
+
+function drawYTicks(state: IState, x: number) {
+    const ctx = state.ctx;
+    const cfg = state.config;
+
+    ctx.font = "normal normal 16px 'Calibri', sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = 'middle';
+
+    let tickStep = state.maxY/cfg.nTicks;
+    let ticks = range(0, state.maxY+tickStep, tickStep);
+    let tickDistance = state.plotHeight / cfg.nTicks;
+    let y = cfg.margin + state.plotHeight + cfg.arrowLength + cfg.axisCutoff;
+    for (const tick of ticks) {
+        ctx.fillText(tick.toFixed(2), x - 4 * cfg.arrowOffset, y);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - cfg.tickHeight, y);
+        ctx.stroke();
+        y -= tickDistance;
+    }
 }
 
 export function drawPlot(state: IState) {

@@ -22,11 +22,12 @@ const state: IState = {
     tension: 0,
     segmentsElement: undefined,
     config: {
-        margin: 45,
+        margin: 50,
         arrowOffset: 8,
         arrowLength: 8 / Math.sqrt(2),
         axisCutoff: 25,
         tickHeight: 8,
+        nTicks: 5,
         lineColour: '#bc5090',
         pointColour: '#82929f78',
         pointRadius: 14,
@@ -42,12 +43,12 @@ const state: IState = {
 
 function updateScale() {
     const cfg =  state.config;
-    const width = state.canvas.width - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
-    const height = state.canvas.height - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
-    state.xScale = width / max([max(state.x), 1.0]);
+    state.plotWidth = state.canvas.width - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
+    state.plotHeight = state.canvas.height - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
+    state.xScale = state.plotWidth / max([max(state.x), 1.0]);
     state.xOffset = cfg.margin;
-    state.yScale = height / state.maxY;
-    state.yOffset = height + cfg.margin + cfg.axisCutoff + cfg.arrowLength;
+    state.yScale = state.plotHeight / state.maxY;
+    state.yOffset = state.plotHeight + cfg.margin + cfg.axisCutoff + cfg.arrowLength;
 }
 
 function drawFrame() {

@@ -12,6 +12,8 @@ export interface IState {
     xOffset: number;
     yScale: number,
     yOffset: number;
+    plotWidth: number;
+    plotHeight: number;
     points: IPoint[];
     pointIdxBeingDragged: number;
     pointIdxHoveredOn: number;
@@ -26,6 +28,7 @@ export interface IConfig {
     arrowLength: number;
     axisCutoff: number;
     tickHeight: number;
+    nTicks: number;
     lineColour: string;
     pointColour: string;
     pointRadius: number;
