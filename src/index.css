@@ -66,6 +66,13 @@ button:focus {
     height: 70vh;
 }
 
+@media screen and (max-width: 992px) {
+    #plot {
+        width: 100vw;
+        height: 70vh;
+    }
+}
+
 .controls-container {
     max-width: 350px;
 }
@@ -84,6 +91,11 @@ button:focus {
 
 .ml-10 {
     margin-left: 10px;
+}
+
+.mv-10 {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .center-vertical {
