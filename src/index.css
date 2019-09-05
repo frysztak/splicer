@@ -26,12 +26,12 @@ button {
     cursor: pointer;
 }
 
-.content {
-    flex: 1 0 auto;
-}
-
 button:focus {
     outline-color: #bc5090;
+}
+
+.content {
+    flex: 1 0 auto;
 }
 
 #segments {
@@ -54,11 +54,38 @@ button:focus {
     flex: 1;
 }
 
+.column-half {
+    width: 50%;
+}
+
+.column-shrink {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+}
+
 .double-column {
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
     flex: 2;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    max-width: 400px;
+}
+
+.form-group label {
+    flex: none;
+    display: block;
+    width: 125px;
+}
+
+.form-group .input-control {
+    flex: 1 1 auto;
+    display: block;
 }
 
 #plot {
@@ -71,10 +98,6 @@ button:focus {
         width: 100vw;
         height: 70vh;
     }
-}
-
-.controls-container {
-    max-width: 350px;
 }
 
 .mt-10 {
@@ -96,6 +119,10 @@ button:focus {
 .mv-10 {
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.max-w-200 {
+    max-width: 200px;
 }
 
 .center-vertical {
