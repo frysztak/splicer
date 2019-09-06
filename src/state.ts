@@ -40,3 +40,28 @@ export interface IConfig {
     tooltipBackground: string;
     tooltipForeground: string;
 }
+
+export class Config implements IConfig {
+    private _cfg: IConfig;
+
+    constructor(cfg: IConfig) {
+        this._cfg = cfg;
+    }
+
+    get arrowLength(): number { return this._cfg.arrowLength * window.devicePixelRatio; }
+    get arrowOffset(): number { return this._cfg.arrowOffset * window.devicePixelRatio; }
+    get axisCutoff(): number { return this._cfg.axisCutoff * window.devicePixelRatio; }
+    get foregroundColour(): string { return this._cfg.foregroundColour; }
+    get lineColour(): string { return this._cfg.lineColour; }
+    get margin(): number { return this._cfg.margin * window.devicePixelRatio; }
+    get nTicks(): number { return this._cfg.nTicks; }
+    get pointColour(): string { return this._cfg.pointColour; }
+    get pointRadius(): number { return this._cfg.pointRadius * window.devicePixelRatio; }
+    get tickHeight(): number { return this._cfg.tickHeight * window.devicePixelRatio; }
+    get tooltipBackground(): string { return this._cfg.tooltipBackground; }
+    get tooltipForeground(): string { return this._cfg.tooltipForeground; }
+    get tooltipHeight(): number { return this._cfg.tooltipHeight * window.devicePixelRatio; }
+    get tooltipMargin(): number { return this._cfg.tooltipMargin * window.devicePixelRatio; }
+    get tooltipRadius(): number { return this._cfg.tooltipRadius * window.devicePixelRatio; }
+    get tooltipWidth(): number { return this._cfg.tooltipWidth * window.devicePixelRatio; }
+}

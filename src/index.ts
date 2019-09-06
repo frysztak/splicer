@@ -2,7 +2,7 @@ import range from 'lodash/range';
 import max from 'lodash/max'
 import {IPoint} from "./point";
 import {Segment, SegmentPoints} from "./segment";
-import {IState} from "./state";
+import {Config, IState} from "./state";
 import {drawAxes, drawPlot, drawPoints, drawTooltip, fromScreenSpace} from "./drawing";
 
 const state: IState = {
@@ -23,7 +23,7 @@ const state: IState = {
     segments: [],
     tension: 0,
     segmentsElement: undefined,
-    config: {
+    config: new Config({
         margin: 50,
         arrowOffset: 8,
         arrowLength: 8 / Math.sqrt(2),
@@ -40,11 +40,11 @@ const state: IState = {
         tooltipMargin: 45,
         tooltipBackground: '#e5cdc8',
         tooltipForeground: '#913d88'
-    }
+    })
 };
 
 function updateScale() {
-    const cfg =  state.config;
+    const cfg = state.config;
     state.plotWidth = state.canvas.width - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
     state.plotHeight = state.canvas.height - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
     state.xScale = state.plotWidth / max([max(state.x), 1.0]);
