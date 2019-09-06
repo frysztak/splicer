@@ -27,9 +27,13 @@ export interface IConfig {
     arrowOffset: number;
     arrowLength: number;
     axisCutoff: number;
+    axisThickness: number;
+    axisFontSize: number;
     tickHeight: number;
+    tickFontSize: number;
     nTicks: number;
     lineColour: string;
+    lineThickness: number;
     pointColour: string;
     pointRadius: number;
     foregroundColour: string;
@@ -51,13 +55,17 @@ export class Config implements IConfig {
     get arrowLength(): number { return this._cfg.arrowLength * window.devicePixelRatio; }
     get arrowOffset(): number { return this._cfg.arrowOffset * window.devicePixelRatio; }
     get axisCutoff(): number { return this._cfg.axisCutoff * window.devicePixelRatio; }
+    get axisThickness(): number { return this._cfg.axisThickness * window.devicePixelRatio; }
+    get axisFontSize(): number { return this._cfg.axisFontSize * window.devicePixelRatio; }
     get foregroundColour(): string { return this._cfg.foregroundColour; }
     get lineColour(): string { return this._cfg.lineColour; }
+    get lineThickness(): number { return this._cfg.lineThickness * window.devicePixelRatio; }
     get margin(): number { return this._cfg.margin * window.devicePixelRatio; }
     get nTicks(): number { return this._cfg.nTicks; }
     get pointColour(): string { return this._cfg.pointColour; }
     get pointRadius(): number { return this._cfg.pointRadius * window.devicePixelRatio; }
     get tickHeight(): number { return this._cfg.tickHeight * window.devicePixelRatio; }
+    get tickFontSize(): number { return this._cfg.tickFontSize * window.devicePixelRatio; }
     get tooltipBackground(): string { return this._cfg.tooltipBackground; }
     get tooltipForeground(): string { return this._cfg.tooltipForeground; }
     get tooltipHeight(): number { return this._cfg.tooltipHeight * window.devicePixelRatio; }

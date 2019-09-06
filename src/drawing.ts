@@ -8,14 +8,13 @@ type NumOrArr = number | number[];
 export function drawAxes(state: IState) {
     const ctx = state.ctx;
     const cfg = state.config;
-    const fontSize = 20 * window.devicePixelRatio;
 
     // x axis
     const y = state.canvas.height - cfg.margin;
     const finalX = state.canvas.width - cfg.margin;
     ctx.strokeStyle = cfg.foregroundColour;
     ctx.fillStyle = cfg.foregroundColour;
-    // ctx.lineWidth = scale(1);
+    ctx.lineWidth = cfg.axisThickness;
     ctx.beginPath();
     ctx.moveTo(cfg.margin, y);
     ctx.lineTo(finalX, y);
@@ -23,21 +22,21 @@ export function drawAxes(state: IState) {
     ctx.moveTo(finalX, y);
     ctx.lineTo(finalX - cfg.arrowOffset, y + cfg.arrowOffset);
     ctx.stroke();
-    ctx.font = `normal bold ${fontSize}px 'Calibri', sans-serif`;
+    ctx.font = `normal bold ${cfg.axisFontSize}px 'Calibri', sans-serif`;
     ctx.fillText('t', finalX - cfg.arrowOffset, y + 4 * cfg.arrowOffset);
     drawXTicks(state, y);
 
     // y axis
     const finalY = state.canvas.height - cfg.margin;
     ctx.beginPath();
-    ctx.lineWidth = 1;
+    ctx.lineWidth = cfg.axisThickness;
     ctx.moveTo(cfg.margin, finalY);
     ctx.lineTo(cfg.margin, cfg.margin);
     ctx.lineTo(cfg.margin - cfg.arrowOffset, cfg.margin + cfg.arrowOffset);
     ctx.moveTo(cfg.margin, cfg.margin);
     ctx.lineTo(cfg.margin + cfg.arrowOffset, cfg.margin + cfg.arrowOffset);
     ctx.stroke();
-    ctx.font = `normal bold ${fontSize}px 'Calibri', sans-serif`;
+    ctx.font = `normal bold ${cfg.axisFontSize}px 'Calibri', sans-serif`;
     ctx.fillText('y', cfg.margin - 4 * cfg.arrowOffset, cfg.margin + cfg.arrowOffset);
     drawYTicks(state, cfg.margin);
 }
@@ -45,9 +44,8 @@ export function drawAxes(state: IState) {
 function drawXTicks(state: IState, y: number) {
     const ctx = state.ctx;
     const cfg = state.config;
-    const fontSize = 16 * window.devicePixelRatio;
 
-    ctx.font = `normal normal ${fontSize}px 'Calibri', sans-serif`;
+    ctx.font = `normal normal ${cfg.tickFontSize}px 'Calibri', sans-serif`;
     ctx.textAlign = "center";
 
     let tickStep = 1/cfg.nTicks;
@@ -67,7 +65,7 @@ function drawYTicks(state: IState, x: number) {
     const ctx = state.ctx;
     const cfg = state.config;
 
-    ctx.font = "normal normal 16px 'Calibri', sans-serif";
+    ctx.font = `normal normal ${cfg.tickFontSize}px 'Calibri', sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = 'middle';
 
@@ -91,7 +89,7 @@ export function drawPlot(state: IState) {
     ctx.moveTo(x[0], y[0]);
     ctx.beginPath();
     ctx.strokeStyle = state.config.lineColour;
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = state.config.lineThickness;
     for (const [x_, y_] of zip(x, y)) {
         ctx.lineTo(x_, y_);
     }
