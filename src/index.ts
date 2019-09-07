@@ -82,10 +82,17 @@ function start() {
     requestAnimationFrame(drawFrame);
 }
 
-function findPoint(ev: MouseEvent): { pointIdx: number; pointCentre: IPoint } {
+function findPoint(ev: MouseEvent | TouchEvent): { pointIdx: number; pointCentre: IPoint } {
     const r = state.config.pointRadius;
     const dpr = window.devicePixelRatio;
-    const pointCentre = fromScreenSpace(state, ev.clientX * dpr, ev.clientY * dpr) as IPoint;
+    const clientX = ev instanceof MouseEvent
+        ? ev.clientX
+        : ev.touches[0].clientX;
+
+    const clientY = ev instanceof MouseEvent
+        ? ev.clientY
+        : ev.touches[0].clientY;
+    const pointCentre = fromScreenSpace(state, clientX * dpr, clientY * dpr) as IPoint;
     const pointIdx =  state.points.findIndex((point: IPoint) =>
         Math.abs(point.x - pointCentre.x) <= 1.25 * r / state.xScale
         && Math.abs(point.y - pointCentre.y) <= 1.25 * r / state.yScale);
@@ -93,7 +100,7 @@ function findPoint(ev: MouseEvent): { pointIdx: number; pointCentre: IPoint } {
     return {pointIdx, pointCentre};
 }
 
-function handleMouseDown(ev: MouseEvent) {
+function handleMouseDown(ev: MouseEvent | TouchEvent) {
     const {pointIdx, pointCentre} = findPoint(ev);
 
     if (pointIdx !== -1) {
@@ -104,7 +111,7 @@ function handleMouseDown(ev: MouseEvent) {
     }
 }
 
-function handleMouseMove(ev: MouseEvent) {
+function handleMouseMove(ev: MouseEvent | TouchEvent) {
     const {pointIdx, pointCentre} = findPoint(ev);
     if (state.pointIdxBeingDragged === undefined) {
         state.pointIdxHoveredOn = pointIdx;
@@ -114,7 +121,7 @@ function handleMouseMove(ev: MouseEvent) {
     }
 }
 
-function handleMouseUp(ev: MouseEvent) {
+function handleMouseUp(ev: MouseEvent | TouchEvent) {
     if (state.pointIdxBeingDragged === undefined) return;
 
     state.pointIdxBeingDragged = undefined;
@@ -175,8 +182,13 @@ function hookEventListeners() {
     copyButton.onclick = handleCopyClick;
 
     state.canvas.onmousedown = handleMouseDown;
+    state.canvas.ontouchstart = handleMouseDown;
+
     state.canvas.onmousemove = handleMouseMove;
+    state.canvas.ontouchmove = handleMouseMove;
+
     state.canvas.onmouseup = handleMouseUp;
+    state.canvas.ontouchend = handleMouseUp;
 }
 
 window.onload = start;
