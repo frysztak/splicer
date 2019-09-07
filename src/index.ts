@@ -69,7 +69,9 @@ function drawFrame() {
     drawSegments();
     drawPlot(state);
     drawPoints(state);
-    if (state.pointIdxHoveredOn !== -1) {
+    if (state.pointIdxBeingDragged !== -1) {
+        drawTooltip(state, state.points[state.pointIdxBeingDragged]);
+    } else if (state.pointIdxHoveredOn !== -1) {
         drawTooltip(state, state.points[state.pointIdxHoveredOn]);
     }
     requestAnimationFrame(drawFrame);
@@ -113,7 +115,7 @@ function handleMouseDown(ev: MouseEvent | TouchEvent) {
 
 function handleMouseMove(ev: MouseEvent | TouchEvent) {
     const {pointIdx, pointCentre} = findPoint(ev);
-    if (state.pointIdxBeingDragged === undefined) {
+    if (state.pointIdxBeingDragged === -1) {
         state.pointIdxHoveredOn = pointIdx;
     } else {
         state.points[state.pointIdxBeingDragged] = pointCentre;
@@ -124,7 +126,8 @@ function handleMouseMove(ev: MouseEvent | TouchEvent) {
 function handleMouseUp(ev: MouseEvent | TouchEvent) {
     if (state.pointIdxBeingDragged === undefined) return;
 
-    state.pointIdxBeingDragged = undefined;
+    state.pointIdxBeingDragged = -1;
+    state.pointIdxHoveredOn = -1;
     updateSegments();
 }
 
