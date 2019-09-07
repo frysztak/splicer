@@ -49,6 +49,11 @@ const state: IState = {
 
 function updateScale() {
     const cfg = state.config;
+    const dpr = window.devicePixelRatio;
+    const rect = state.canvas.getBoundingClientRect();
+
+    state.canvas.width = Math.round(rect.right * dpr) - Math.round(rect.left * dpr);
+    state.canvas.height = state.canvas.offsetHeight * dpr;
     state.plotWidth = state.canvas.width - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
     state.plotHeight = state.canvas.height - 2 * cfg.margin - cfg.axisCutoff - cfg.arrowLength;
     state.xScale = state.plotWidth / max([max(state.x), 1.0]);
@@ -58,8 +63,6 @@ function updateScale() {
 }
 
 function drawFrame() {
-    state.canvas.width = state.canvas.offsetWidth * window.devicePixelRatio;
-    state.canvas.height = state.canvas.offsetHeight * window.devicePixelRatio;
     updateScale();
     drawAxes(state);
     drawSegments();
@@ -80,7 +83,8 @@ function start() {
 
 function findPoint(ev: MouseEvent): { pointIdx: number; pointCentre: IPoint } {
     const r = state.config.pointRadius;
-    const pointCentre = fromScreenSpace(state, ev.clientX - r, ev.clientY - r) as IPoint;
+    const dpr = window.devicePixelRatio;
+    const pointCentre = fromScreenSpace(state, ev.clientX * dpr, ev.clientY * dpr) as IPoint;
     const pointIdx =  state.points.findIndex((point: IPoint) =>
         Math.abs(point.x - pointCentre.x) <= 1.25 * r / state.xScale
         && Math.abs(point.y - pointCentre.y) <= 1.25 * r / state.yScale);
@@ -100,12 +104,11 @@ function handleMouseDown(ev: MouseEvent) {
 }
 
 function handleMouseMove(ev: MouseEvent) {
+    const {pointIdx, pointCentre} = findPoint(ev);
     if (state.pointIdxBeingDragged === undefined) {
-        const {pointIdx, pointCentre} = findPoint(ev);
         state.pointIdxHoveredOn = pointIdx;
     } else {
-        const r = state.config.pointRadius;
-        state.points[state.pointIdxBeingDragged] = fromScreenSpace(state, ev.clientX - r, ev.clientY - r) as IPoint;
+        state.points[state.pointIdxBeingDragged] = pointCentre;
         updateSegments();
     }
 }
