@@ -41,6 +41,7 @@ export interface IConfig {
     tooltipHeight: number;
     tooltipRadius: number;
     tooltipMargin: number;
+    tooltipFontSize: number;
     tooltipBackground: string;
     tooltipForeground: string;
 }
@@ -70,6 +71,7 @@ export class Config implements IConfig {
     get tooltipForeground(): string { return this._cfg.tooltipForeground; }
     get tooltipHeight(): number { return this._cfg.tooltipHeight * window.devicePixelRatio; }
     get tooltipMargin(): number { return this._cfg.tooltipMargin * window.devicePixelRatio; }
+    get tooltipFontSize(): number { return this._cfg.tooltipFontSize * window.devicePixelRatio; }
     get tooltipRadius(): number { return this._cfg.tooltipRadius * window.devicePixelRatio; }
     get tooltipWidth(): number { return this._cfg.tooltipWidth * window.devicePixelRatio; }
 }

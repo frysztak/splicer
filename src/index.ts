@@ -42,6 +42,7 @@ const state: IState = {
         tooltipHeight: 40,
         tooltipRadius: 5,
         tooltipMargin: 45,
+        tooltipFontSize: 18,
         tooltipBackground: '#e5cdc8',
         tooltipForeground: '#913d88'
     })

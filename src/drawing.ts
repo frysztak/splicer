@@ -138,7 +138,7 @@ export function drawTooltip(state: IState, point: IPoint) {
     ctx.textBaseline = 'middle';
     ctx.fillStyle = cfg.tooltipForeground;
     ctx.strokeStyle = cfg.tooltipForeground;
-    ctx.font = "normal normal 18px 'Calibri', sans-serif";
+    ctx.font = `normal normal ${cfg.tooltipFontSize}px 'Calibri', sans-serif`;
     ctx.fillText(text, x, y);
 }
 
