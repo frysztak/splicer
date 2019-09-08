@@ -139,11 +139,16 @@ function handleTensionChange(ev: Event) {
 
 function handleCopyClick() {
     if (state.segments.length) {
-        navigator.clipboard.writeText(getSegmentsJSON()).then(() => {
-            const copyButton = document.getElementById('copy') as HTMLButtonElement;
-            copyButton.innerText = "Copied!";
-            setTimeout(() => copyButton.innerText = "Copy", 1000);
-        })
+        const copyButton = document.getElementById('copy') as HTMLButtonElement;
+        navigator.clipboard.writeText(getSegmentsJSON())
+            .then(() => {
+                copyButton.innerText = "Copied!";
+                setTimeout(() => copyButton.innerText = "Copy", 1000);
+            })
+            .catch(() => {
+                copyButton.innerText = "Failed to copy";
+                setTimeout(() => copyButton.innerText = "Copy", 1000);
+            })
     }
 }
 
