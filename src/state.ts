@@ -20,6 +20,10 @@ export interface IState {
     segments: Segment[];
     segmentsElement: HTMLPreElement;
     tension: number;
+    contextMenuVisible: boolean;
+    contextMenu: HTMLElement;
+    contextMenuPointIdx: number;
+    contextMenuPoint: IPoint;
 }
 
 export interface IConfig {

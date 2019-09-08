@@ -172,6 +172,34 @@ pre {
     font-size: 1rem;
 }
 
+.menu {
+    width: 180px;
+    z-index: 1;
+    display: none;
+    position: absolute;
+    background: #e5cdc8;
+}
+
+.menu-options {
+    list-style: none;
+    padding: 10px 0;
+    margin: 5px 0 5px 0;
+    z-index: 1;
+}
+
+.menu-option {
+    font-weight: 500;
+    z-index: 1;
+    padding: 10px 40px 10px 20px;
+    cursor: pointer;
+    color: #913d88;
+    font-size: 1rem;
+}
+
+.menu-option:hover {
+     background: rgba(0, 0, 0, 0.2);
+}
+
 /* range slider */
 input[type=range].slider {
     -webkit-appearance: none;

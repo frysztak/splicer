@@ -23,6 +23,10 @@ const state: IState = {
     segments: [],
     tension: 0,
     segmentsElement: undefined,
+    contextMenuVisible: false,
+    contextMenu: undefined,
+    contextMenuPointIdx: -1,
+    contextMenuPoint: undefined,
     config: new Config({
         margin: 50,
         arrowOffset: 8,
@@ -104,18 +108,27 @@ function findPoint(ev: MouseEvent | TouchEvent): { pointIdx: number; pointCentre
 }
 
 function handleMouseDown(ev: MouseEvent | TouchEvent) {
+    if (ev instanceof MouseEvent && ev.button === 2) return;
+    if (state.contextMenuVisible)  {
+        changeContextMenuVisibility(false);
+        return;
+    }
+
     const {pointIdx, pointCentre} = findPoint(ev);
 
     if (pointIdx !== -1) {
         state.pointIdxBeingDragged = pointIdx;
     } else {
-        if (state.points.length >= 4) {
-            state.points.push(state.points[state.points.length - 1]);
-            state.points[state.points.length - 2] = pointCentre;
-        } else {
-            state.points.push(pointCentre);
-        }
+        insertPoint(pointCentre);
         updateSegments();
+    }
+}
+
+function insertPoint(point: IPoint) {
+    if (state.points.length >= 4) {
+        state.points.splice(state.points.length - 1, 0, point);
+    } else {
+        state.points.push(point);
     }
 }
 
@@ -159,7 +172,11 @@ function handleCopyClick() {
 
 function updateSegments() {
     const points = state.points;
-    if (points.length < 4) return;
+    if (points.length < 4) {
+        state.segments = [];
+        state.segmentsElement.innerText = '';
+        return;
+    }
 
     const chunks: SegmentPoints[] = [];
     const stride = 3;
@@ -176,15 +193,60 @@ function getSegmentsJSON(): string {
 }
 
 function drawSegments() {
+    state.x = state.y = [];
     if (!state.segments.length) return;
 
-    state.x = state.y = [];
     const t = range(0, 1, 0.01);
     for (const segment of state.segments) {
         const {x, y} = segment.evaluate(t);
         state.x = state.x.concat(x);
         state.y = state.y.concat(y);
     }
+}
+
+function handleContextMenu(ev: MouseEvent) {
+    ev.preventDefault();
+    const {pointIdx, pointCentre} = findPoint(ev);
+    state.contextMenu.style.left = `${ev.pageX}px`;
+    state.contextMenu.style.top = `${ev.pageY}px`;
+    state.contextMenuPointIdx = pointIdx;
+    state.contextMenuPoint = pointCentre;
+    document.getElementById('removePoint').style.display = pointIdx !== -1 ? 'block' : 'none';
+    changeContextMenuVisibility(true);
+}
+
+function changeContextMenuVisibility(show: boolean) {
+    state.contextMenu.style.display = show ? 'block' : 'none';
+    state.contextMenuVisible = show;
+}
+
+function handleAddPoint(ev: MouseEvent) {
+    if (state.contextMenuPointIdx !== -1) return;
+    const point = state.contextMenuPoint;
+
+    const idx = state.points.findIndex((p: IPoint) => p.x > point.x);
+    if (idx !== -1) {
+        state.points.splice(idx, 0, point);
+    } else {
+        insertPoint(point);
+    }
+    updateSegments();
+    changeContextMenuVisibility(false);
+}
+
+function handleRemovePoint(ev: MouseEvent) {
+    const idx = state.contextMenuPointIdx;
+    if (idx !== -1) {
+        state.points.splice(idx, 1);
+        updateSegments();
+    }
+    changeContextMenuVisibility(false);
+}
+
+function handleRemoveAllPoints() {
+    state.points = [];
+    updateSegments();
+    changeContextMenuVisibility(false);
 }
 
 function hookEventListeners() {
@@ -198,6 +260,13 @@ function hookEventListeners() {
 
     const copyButton = document.getElementById('copy') as HTMLButtonElement;
     copyButton.onclick = handleCopyClick;
+
+    state.contextMenu = document.getElementById('menu');
+    state.canvas.oncontextmenu = handleContextMenu;
+
+    document.getElementById('addPoint').onclick = handleAddPoint;
+    document.getElementById('removePoint').onclick = handleRemovePoint;
+    document.getElementById('removeAllPoints').onclick = handleRemoveAllPoints;
 
     state.canvas.onmousedown = handleMouseDown;
     state.canvas.ontouchstart = handleMouseDown;
