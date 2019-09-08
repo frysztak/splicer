@@ -99,11 +99,13 @@ export function drawPlot(state: IState) {
 export function drawPoints(state: IState) {
     const ctx = state.ctx;
 
-    for (const point of state.points) {
+    for (const [index, point] of state.points.entries()) {
+        const firstOrLast = state.points.length >= 4 && (index === 0 || index === state.points.length - 1);
+
         ctx.beginPath();
         const {x, y} = toScreenSpace(state, point.x, point.y) as IPoint;
         ctx.arc(x, y, state.config.pointRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = state.config.pointColour;
+        ctx.fillStyle = firstOrLast ? state.config.controlPointColour : state.config.pointColour;
         ctx.fill();
     }
 }

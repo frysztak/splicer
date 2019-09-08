@@ -35,6 +35,7 @@ export interface IConfig {
     lineColour: string;
     lineThickness: number;
     pointColour: string;
+    controlPointColour: string;
     pointRadius: number;
     foregroundColour: string;
     tooltipWidth: number;
@@ -64,6 +65,7 @@ export class Config implements IConfig {
     get margin(): number { return this._cfg.margin * window.devicePixelRatio; }
     get nTicks(): number { return this._cfg.nTicks; }
     get pointColour(): string { return this._cfg.pointColour; }
+    get controlPointColour(): string { return this._cfg.controlPointColour; }
     get pointRadius(): number { return this._cfg.pointRadius * window.devicePixelRatio; }
     get tickHeight(): number { return this._cfg.tickHeight * window.devicePixelRatio; }
     get tickFontSize(): number { return this._cfg.tickFontSize * window.devicePixelRatio; }

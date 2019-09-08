@@ -36,6 +36,7 @@ const state: IState = {
         lineColour: '#bc5090',
         lineThickness: 2.5,
         pointColour: '#82929f78',
+        controlPointColour: '#57467b78',
         pointRadius: 14,
         foregroundColour: '#cecccc',
         tooltipWidth: 105,
