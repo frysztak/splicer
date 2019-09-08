@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Splicer</title>
+    <link rel="shortcut icon" href="splicer.ico">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script type="text/javascript" src="splicer.js"></script>
+</head>
+
+<body>
+<div class="menu" id="menu">
+    <ul class="menu-options">
+        <li class="menu-option" id="addPoint">Add point here</li>
+        <li class="menu-option" id="removePoint">Remove this point</li>
+        <li class="menu-option" id="removeAllPoints">Remove all points</li>
+    </ul>
+</div>
+
+<div class="content mv-10">
+    <div class="row">
+        <div class="column">
+            <canvas id="plot">
+                Please enable HTML canvas.
+            </canvas>
+        </div>
+        <div class="column mt-50">
+            <div class="form-group center-vertical">
+                <label for="maxY">Max Y value:</label>
+                <input type="range" class="slider input-control" id="maxY" name="maxY" min="0.5" max="10.0" step="0.5"
+                       value="1.0">
+            </div>
+
+            <div class="form-group center-vertical mt-10">
+                <label class="" for="tension">Tension:</label>
+                <input type="range" class="slider input-control" id="tension" name="tension" min="0" max="1" step="0.05"
+                       value="0">
+            </div>
+
+            <div class="form-group center-vertical mt-10">
+                <label class="heading" for="copy">Segments:</label>
+                <button class="input-control" id="copy">Copy</button>
+            </div>
+
+            <div class="row center-vertical mt-10">
+                <pre id="segments"></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-30">
+        <div class="column">
+            Usage:
+            <ol>
+                <li>Click to add points to the plot (minimum 4 points are required)</li>
+                <li>Right to click to open context menu</li>
+                <li>Drag points to move them</li>
+                <li>Adjust parameters and positions to your heart's content</li>
+                <li>Copy pre-calculated Catmull-Rom segment coefficients and use them in your awesome project!</li>
+            </ol>
+            Example code to calculate x/y values from segment coefficients:
+            <pre>
+let x = [];
+let y = [];
+const t = range(0, 1, 0.01);
+for (const s of segments) {
+    const xs = t.map(t_ => s.a.x * Math.pow(t_, 3) + s.b.x * Math.pow(t_, 2) + s.c.x * t_ + s.d.x);
+    const ys = t.map(t_ => s.a.y * Math.pow(t_, 3) + s.b.y * Math.pow(t_, 2) + s.c.y * t_ + s.d.y);
+    x = x.concat(xs);
+    y = y.concat(ys);
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="row">
+        <div class="column align-left">
+            <a href="https://github.com/frysztak/splicer">
+                    <span class="d-flex center-vertical">
+                        <img class="icon" src="github.png" alt="GitHub icon">
+                        <span class="ml-10">GitHub</span>
+                    </span>
+            </a>
+        </div>
+
+        <div class="column align-right">
+            Sebastian Frysztak, 2019
+        </div>
+    </div>
+</footer>
+
+</body>
+
+</html>

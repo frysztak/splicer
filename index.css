@@ -1,0 +1,269 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Calibri', sans-serif;
+    background-color: #231f22;
+    color: #cecccc;
+    font-size: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+button {
+    margin-left: 10px;
+    padding: 0;
+    border: 0;
+    height: 26px;
+    background: #e5cdc8;
+    color: #913d88;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+button:focus {
+    outline-color: #bc5090;
+}
+
+.content {
+    flex: 1 0 auto;
+}
+
+#segments {
+    max-height: 300px;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
+
+.column-half {
+    width: 50%;
+}
+
+.column-shrink {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+}
+
+.double-column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 2;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    max-width: 350px;
+}
+
+.form-group label {
+    flex: none;
+    display: block;
+    width: 125px;
+}
+
+.form-group .input-control {
+    flex: 1 1 auto;
+    display: block;
+}
+
+#plot {
+    width: 70vw;
+    height: 100%;
+    min-height: 80vh;
+    touch-action: none;
+}
+
+@media screen and (max-width: 992px) {
+    #plot {
+        width: 100vw;
+    }
+
+    ol {
+        padding-inline-start: 20px;
+    }
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
+.mt-50 {
+    margin-top: 50px;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.mv-10 {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.max-w-200 {
+    max-width: 200px;
+}
+
+.center-vertical {
+    align-items: center;
+}
+
+.align-left {
+    align-items: flex-start;
+}
+
+.align-right {
+    align-items: flex-end;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+a {
+    color: unset;
+    text-decoration: none;
+}
+
+footer {
+    padding: 1rem;
+    text-align: center;
+    border-top: #bc5090 1px solid;
+    font-size: 0.85em;
+    flex-shrink: 0;
+}
+
+ol {
+    margin-top: 5px;
+}
+
+pre {
+    font-size: 1rem;
+    white-space: pre-wrap;
+}
+
+.menu {
+    width: 180px;
+    z-index: 1;
+    display: none;
+    position: absolute;
+    background: #e5cdc8;
+}
+
+.menu-options {
+    list-style: none;
+    padding: 10px 0;
+    margin: 5px 0 5px 0;
+    z-index: 1;
+}
+
+.menu-option {
+    font-weight: 500;
+    z-index: 1;
+    padding: 10px 40px 10px 20px;
+    cursor: pointer;
+    color: #913d88;
+    font-size: 1rem;
+}
+
+.menu-option:hover {
+     background: rgba(0, 0, 0, 0.2);
+}
+
+/* range slider */
+input[type=range].slider {
+    -webkit-appearance: none;
+    margin: 1px 0 1px 10px;
+}
+input[type=range].slider:focus {
+    outline: none;
+}
+input[type=range].slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 26px;
+    cursor: pointer;
+    background: #e5cdc8;
+}
+input[type=range].slider::-webkit-slider-thumb {
+    height: 27px;
+    width: 16px;
+    background: rgba(188, 80, 144, 0.93);
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -0.7px;
+}
+input[type=range].slider:focus::-webkit-slider-runnable-track {
+    background: #e5cdc8;
+}
+input[type=range].slider::-moz-range-track {
+    width: 100%;
+    height: 26px;
+    cursor: pointer;
+    background: #e5cdc8;
+}
+input[type=range].slider::-moz-range-thumb {
+    height: 27px;
+    width: 16px;
+    background: rgba(188, 80, 144, 0.93);
+    border: 0;
+    border-radius: 0;
+    cursor: pointer;
+}
+input[type=range].slider::-ms-track {
+    width: 100%;
+    height: 26px;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+input[type=range].slider::-ms-fill-lower {
+    background: #e5cdc8;
+}
+input[type=range].slider::-ms-fill-upper {
+    background: #e5cdc8;
+}
+input[type=range].slider::-ms-thumb {
+    width: 16px;
+    background: rgba(188, 80, 144, 0.93);
+    cursor: pointer;
+    height: 27px;
+}
+input[type=range].slider:focus::-ms-fill-lower {
+    background: #e5cdc8;
+}
+input[type=range].slider:focus::-ms-fill-upper {
+    background: #e5cdc8;
+}
+
