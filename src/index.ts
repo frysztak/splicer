@@ -212,6 +212,7 @@ function handleContextMenu(ev: MouseEvent) {
     state.contextMenuPointIdx = pointIdx;
     state.contextMenuPoint = pointCentre;
     document.getElementById('removePoint').style.display = pointIdx !== -1 ? 'block' : 'none';
+    document.getElementById('addPoint').style.display = pointIdx !== -1 ? 'none' : 'block';
     changeContextMenuVisibility(true);
 }
 
@@ -221,7 +222,10 @@ function changeContextMenuVisibility(show: boolean) {
 }
 
 function handleAddPoint(ev: MouseEvent) {
-    if (state.contextMenuPointIdx !== -1) return;
+    if (state.contextMenuPointIdx !== -1) {
+        changeContextMenuVisibility(false);
+        return;
+    }
     const point = state.contextMenuPoint;
 
     const idx = state.points.findIndex((p: IPoint) => p.x > point.x);
