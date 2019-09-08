@@ -10,7 +10,9 @@
     "serve": "http-server dist/ -s",
     "start": "npm-run-all --parallel dev:watch copy:static:watch serve",
     "prod": "webpack --mode production",
-    "build": "npm-run-all copy:static prod"
+    "build": "npm-run-all copy:static prod",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [
     "catmull",
@@ -19,9 +21,11 @@
   ],
   "author": "Sebastian Frysztak",
   "license": "MIT",
+  "homepage": "https://frysztak.github.io/splicer",
   "devDependencies": {
     "@types/lodash": "^4.14.138",
     "cpx": "^1.5.0",
+    "gh-pages": "^2.1.1",
     "http-server": "^0.11.1",
     "npm-run-all": "^4.1.5",
     "ts-loader": "^6.0.4",
