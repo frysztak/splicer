@@ -170,6 +170,7 @@ ol {
 
 pre {
     font-size: 1rem;
+    white-space: pre-wrap;
 }
 
 .menu {
