@@ -5,6 +5,16 @@ import {Segment, SegmentPoints} from "./segment";
 import {Config, IState} from "./state";
 import {drawAxes, drawPlot, drawPoints, drawTooltip, fromScreenSpace} from "./drawing";
 
+const initialPoints: IPoint[] = [
+    {x: 0.12, y: 0.67},
+    {x: 0.01, y: 0.01},
+    {x: 0.15, y: 0.30},
+    {x: 0.25, y: 1.00},
+    {x: 0.50, y: 1.00},
+    {x: 0.60, y: 0.00},
+    {x: 0.90, y: 0.90},
+];
+
 const state: IState = {
     ctx: undefined,
     canvas: undefined,
@@ -17,7 +27,7 @@ const state: IState = {
     yOffset: 0,
     plotWidth: 0,
     plotHeight: 0,
-    points: [],
+    points: initialPoints,
     pointIdxBeingDragged: -1,
     pointIdxHoveredOn: -1,
     segments: [],
@@ -86,6 +96,7 @@ function start() {
     state.canvas = <HTMLCanvasElement>document.getElementById('plot');
     state.ctx = state.canvas.getContext('2d');
     hookEventListeners();
+    updateSegments();
     requestAnimationFrame(drawFrame);
 }
 
