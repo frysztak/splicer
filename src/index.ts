@@ -109,7 +109,12 @@ function handleMouseDown(ev: MouseEvent | TouchEvent) {
     if (pointIdx !== -1) {
         state.pointIdxBeingDragged = pointIdx;
     } else {
-        state.points.push(pointCentre);
+        if (state.points.length >= 4) {
+            state.points.push(state.points[state.points.length - 1]);
+            state.points[state.points.length - 2] = pointCentre;
+        } else {
+            state.points.push(pointCentre);
+        }
         updateSegments();
     }
 }
