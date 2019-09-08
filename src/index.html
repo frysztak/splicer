@@ -55,9 +55,22 @@
             Usage:
             <ol>
                 <li>Click to add points to the plot (minimum 4 points are required)</li>
+                <li>Right to click to open context menu</li>
                 <li>Adjust parameters and positions to your heart's content</li>
                 <li>Copy pre-calculated Catmull-Rom segment coefficients and use them in your awesome project!</li>
             </ol>
+            Example code to calculate x/y values from segment coefficients:
+            <pre>
+let x = [];
+let y = [];
+const t = range(0, 1, 0.01);
+for (const s of segments) {
+    const xs = t.map(t_ => s.a.x * Math.pow(t_, 3) + s.b.x * Math.pow(t_, 2) + s.c.x * t_ + s.d.x);
+    const ys = t.map(t_ => s.a.y * Math.pow(t_, 3) + s.b.y * Math.pow(t_, 2) + s.c.y * t_ + s.d.y);
+    x = x.concat(xs);
+    y = y.concat(ys);
+}
+            </pre>
         </div>
     </div>
 </div>
