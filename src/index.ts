@@ -32,6 +32,7 @@ const state: IState = {
     pointIdxHoveredOn: -1,
     segments: [],
     tension: 0,
+    alpha: 0.5,
     segmentsElement: undefined,
     contextMenuVisible: false,
     contextMenu: undefined,
@@ -166,6 +167,11 @@ function handleTensionChange(ev: Event) {
     updateSegments();
 }
 
+function handleAlphaChange(ev: Event) {
+    state.alpha = Number((ev.target as HTMLInputElement).value);
+    updateSegments();
+}
+
 function handleCopyClick() {
     if (state.segments.length) {
         const copyButton = document.getElementById('copy') as HTMLButtonElement;
@@ -195,7 +201,7 @@ function updateSegments() {
         chunks.push(points.slice(i-stride, i+1) as SegmentPoints);
     }
 
-    state.segments = chunks.map((chunk: SegmentPoints) => new Segment(chunk, state.tension));
+    state.segments = chunks.map((chunk: SegmentPoints) => new Segment(chunk, state.tension, state.alpha));
     state.segmentsElement.innerText = getSegmentsJSON();
 }
 
@@ -270,6 +276,9 @@ function hookEventListeners() {
 
     const tensionInput = document.getElementById('tension') as HTMLInputElement;
     tensionInput.oninput = handleTensionChange;
+
+    const alphaInput = document.getElementById('alpha') as HTMLInputElement;
+    alphaInput.oninput = handleAlphaChange;
 
     state.segmentsElement = document.getElementById('segments') as HTMLPreElement;
 

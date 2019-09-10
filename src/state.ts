@@ -20,6 +20,7 @@ export interface IState {
     segments: Segment[];
     segmentsElement: HTMLPreElement;
     tension: number;
+    alpha: number;
     contextMenuVisible: boolean;
     contextMenu: HTMLElement;
     contextMenuPointIdx: number;
