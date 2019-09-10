@@ -172,19 +172,38 @@ function handleAlphaChange(ev: Event) {
     updateSegments();
 }
 
-function handleCopyClick() {
+function handleCopyToClipboard(button: HTMLButtonElement, json: boolean) {
+    const str = json ? getSegmentsJSON() : getSegmentsTS();
     if (state.segments.length) {
-        const copyButton = document.getElementById('copy') as HTMLButtonElement;
-        navigator.clipboard.writeText(getSegmentsJSON())
+        const originalText = button.innerText;
+        navigator.clipboard.writeText(str)
             .then(() => {
-                copyButton.innerText = "Copied!";
-                setTimeout(() => copyButton.innerText = "Copy", 1000);
+                button.innerText = "Copied!";
+                button.disabled = true;
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.disabled = false;
+                }, 1000);
             })
             .catch(() => {
-                copyButton.innerText = "Failed to copy";
-                setTimeout(() => copyButton.innerText = "Copy", 1000);
+                button.innerText = "Failed to copy";
+                button.disabled = true;
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.disabled = false;
+                }, 1000);
             })
     }
+}
+
+function handleCopyJSONClick() {
+    const copyButton = document.getElementById('copyJSON') as HTMLButtonElement;
+    handleCopyToClipboard(copyButton, true);
+}
+
+function handleCopyTSClick() {
+    const copyButton = document.getElementById('copyTS') as HTMLButtonElement;
+    handleCopyToClipboard(copyButton, false);
 }
 
 function updateSegments() {
@@ -201,12 +220,31 @@ function updateSegments() {
         chunks.push(points.slice(i-stride, i+1) as SegmentPoints);
     }
 
-    state.segments = chunks.map((chunk: SegmentPoints) => new Segment(chunk, state.tension, state.alpha));
+    state.segments = chunks.map((chunk: SegmentPoints) => {
+        const segment = new Segment();
+        segment.calculateCoefficients(chunk, state.tension, state.alpha);
+        return segment;
+    });
     state.segmentsElement.innerText = getSegmentsJSON();
 }
 
 function getSegmentsJSON(): string {
    return JSON.stringify(state.segments.map((segment: Segment) => segment.getCoefficients()), null, 2);
+}
+
+function getSegmentsTS(): string {
+    const printCoeffs = (segment: Segment) => {
+        return `new Segment(
+        {x: ${segment.a.x}, y: ${segment.a.y}},
+        {x: ${segment.b.x}, y: ${segment.b.y}},
+        {x: ${segment.c.x}, y: ${segment.c.y}},
+        {x: ${segment.d.x}, y: ${segment.d.y}}
+    )`;
+    };
+    const segmentsStr = state.segments.map(printCoeffs).join(',\n    ');
+    return `const segments = [
+    ${segmentsStr}
+];`;
 }
 
 function drawSegments() {
@@ -282,8 +320,11 @@ function hookEventListeners() {
 
     state.segmentsElement = document.getElementById('segments') as HTMLPreElement;
 
-    const copyButton = document.getElementById('copy') as HTMLButtonElement;
-    copyButton.onclick = handleCopyClick;
+    const copyJSONButton = document.getElementById('copyJSON') as HTMLButtonElement;
+    copyJSONButton.onclick = handleCopyJSONClick;
+
+    const copyTSButton = document.getElementById('copyTS') as HTMLButtonElement;
+    copyTSButton.onclick = handleCopyTSClick;
 
     state.contextMenu = document.getElementById('menu');
     state.canvas.oncontextmenu = handleContextMenu;

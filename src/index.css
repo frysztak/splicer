@@ -13,7 +13,6 @@ body {
 }
 
 button {
-    margin-left: 10px;
     padding: 0;
     border: 0;
     height: 26px;
@@ -149,6 +148,10 @@ button:focus {
 .icon {
     width: 24px;
     height: 24px;
+}
+
+.w-50 {
+    width: 50%;
 }
 
 a {
