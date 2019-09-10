@@ -177,27 +177,22 @@ function handleAlphaChange(ev: Event) {
     updateSegments();
 }
 
+function flashButton(button: HTMLButtonElement, text: string) {
+    const originalText = button.innerText;
+    button.innerText = text;
+    button.disabled = true;
+    setTimeout(() => {
+        button.innerText = originalText;
+        button.disabled = false;
+    }, 1000);
+}
+
 function handleCopyToClipboard(button: HTMLButtonElement, json: boolean) {
     const str = json ? getSegmentsJSON() : getSegmentsTS();
     if (state.segments.length) {
-        const originalText = button.innerText;
         navigator.clipboard.writeText(str)
-            .then(() => {
-                button.innerText = "Copied!";
-                button.disabled = true;
-                setTimeout(() => {
-                    button.innerText = originalText;
-                    button.disabled = false;
-                }, 1000);
-            })
-            .catch(() => {
-                button.innerText = "Failed to copy";
-                button.disabled = true;
-                setTimeout(() => {
-                    button.innerText = originalText;
-                    button.disabled = false;
-                }, 1000);
-            })
+            .then(() => flashButton(button, "Copied!"))
+            .catch(() => flashButton(button, "Failed to copy"));
     }
 }
 
@@ -338,13 +333,7 @@ function handleImportButton() {
                 updateSegments();
             } else {
                 const importButton = document.getElementById('import') as HTMLButtonElement;
-                const originalText = importButton.innerText;
-                importButton.disabled = true;
-                importButton.innerText = 'Corrupted JSON';
-                setTimeout(() => {
-                    importButton.disabled = false;
-                    importButton.innerText = originalText;
-                }, 1000);
+                flashButton(importButton, 'Corrupted JSON');
             }
         }
     };
