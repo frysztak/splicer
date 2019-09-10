@@ -4,12 +4,12 @@
   "description": "Catmull-Rom splices editor",
   "main": "index.js",
   "scripts": {
-    "dev:watch": "webpack --mode development --watch",
+    "dev:watch": "webpack --mode development --config webpack.dev.js --watch",
     "copy:static": "cpx src/*.{html,css,png,ico} dist/",
     "copy:static:watch": "cpx src/*.{html,css,png,ico} dist/ --watch",
     "serve": "http-server dist/ -s",
     "start": "npm-run-all --parallel dev:watch copy:static:watch serve",
-    "prod": "webpack --mode production",
+    "prod": "webpack --mode production --config webpack.prod.js",
     "build": "npm-run-all copy:static prod",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
@@ -33,7 +33,8 @@
     "ts-loader": "^6.0.4",
     "typescript": "^3.6.2",
     "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7"
+    "webpack-cli": "^3.3.7",
+    "webpack-merge": "^4.2.2"
   },
   "dependencies": {
     "file-saver": "^2.0.2",
