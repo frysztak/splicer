@@ -5,6 +5,7 @@
     "sourceMap": true,
     "module": "es6",
     "target": "es6",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
   }
 }

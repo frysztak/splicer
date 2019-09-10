@@ -4,6 +4,11 @@ import {IPoint} from "./point";
 import {Segment, SegmentPoints} from "./segment";
 import {Config, IState} from "./state";
 import {drawAxes, drawPlot, drawPoints, drawTooltip, fromScreenSpace} from "./drawing";
+import {saveAs} from "file-saver";
+import {ISerialisedState} from "./serialisedState";
+import ISerialisedStateTI  from "./serialisedState-ti";
+import IPointTI  from "./point-ti";
+import {createCheckers} from "ts-interface-checker";
 
 const initialPoints: IPoint[] = [
     {x: 0.12, y: 0.67},
@@ -308,6 +313,58 @@ function handleRemoveAllPoints() {
     changeContextMenuVisibility(false);
 }
 
+function populateState(data: ISerialisedState) {
+    state.maxY = data.maxY;
+    state.tension = data.tension;
+    state.alpha = data.alpha;
+    state.points = data.points;
+}
+
+function handleImportButton() {
+    const input = document.createElement('input') as HTMLInputElement;
+    input.type = 'file';
+
+    input.onchange = (e: Event) => {
+        const file = (e.target as HTMLInputElement).files[0];
+        const reader = new FileReader();
+        reader.readAsText(file,'UTF-8');
+        reader.onload = (readerEvent) => {
+            const json = (readerEvent.target as FileReader).result as string;
+            const data = JSON.parse(json);
+            const {ISerialisedState} = createCheckers(ISerialisedStateTI, IPointTI);
+            if (ISerialisedState.strictTest(data)) {
+                const serialisedState = data as ISerialisedState;
+                populateState(serialisedState);
+                updateSegments();
+            } else {
+                const importButton = document.getElementById('import') as HTMLButtonElement;
+                const originalText = importButton.innerText;
+                importButton.disabled = true;
+                importButton.innerText = 'Corrupted JSON';
+                setTimeout(() => {
+                    importButton.disabled = false;
+                    importButton.innerText = originalText;
+                }, 1000);
+            }
+        }
+    };
+
+    input.click();
+}
+
+function handleExportButton() {
+    const data: ISerialisedState  = {
+        maxY: state.maxY,
+        tension: state.tension,
+        alpha: state.alpha,
+        points: state.points,
+    };
+
+    const json = JSON.stringify(data, null,  2);
+    const blob = new Blob([json], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "splicer.json", {autoBom: true});
+}
+
 function hookEventListeners() {
     const maxYInput = document.getElementById('maxY') as HTMLInputElement;
     maxYInput.oninput = ((ev: Event) => state.maxY = Number((ev.target as HTMLInputElement).value));
@@ -325,6 +382,12 @@ function hookEventListeners() {
 
     const copyTSButton = document.getElementById('copyTS') as HTMLButtonElement;
     copyTSButton.onclick = handleCopyTSClick;
+
+    const importButton = document.getElementById('import') as HTMLButtonElement;
+    importButton.onclick = handleImportButton;
+
+    const exportButton = document.getElementById('export') as HTMLButtonElement;
+    exportButton.onclick = handleExportButton;
 
     state.contextMenu = document.getElementById('menu');
     state.canvas.oncontextmenu = handleContextMenu;

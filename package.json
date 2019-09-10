@@ -23,17 +23,21 @@
   "license": "MIT",
   "homepage": "https://frysztak.github.io/splicer",
   "devDependencies": {
+    "@types/file-saver": "^2.0.1",
     "@types/lodash": "^4.14.138",
     "cpx": "^1.5.0",
     "gh-pages": "^2.1.1",
     "http-server": "^0.11.1",
     "npm-run-all": "^4.1.5",
+    "ts-interface-builder": "^0.2.0",
     "ts-loader": "^6.0.4",
     "typescript": "^3.6.2",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"
   },
   "dependencies": {
-    "lodash": "^4.17.15"
+    "file-saver": "^2.0.2",
+    "lodash": "^4.17.15",
+    "ts-interface-checker": "^0.1.9"
   }
 }
