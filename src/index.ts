@@ -310,8 +310,17 @@ function handleRemoveAllPoints() {
 
 function populateState(data: ISerialisedState) {
     state.maxY = data.maxY;
+    const maxYInput = document.getElementById('maxY') as HTMLInputElement;
+    maxYInput.valueAsNumber = data.maxY;
+
     state.tension = data.tension;
+    const tensionInput = document.getElementById('tension') as HTMLInputElement;
+    tensionInput.valueAsNumber = data.tension;
+
     state.alpha = data.alpha;
+    const alphaInput = document.getElementById('alpha') as HTMLInputElement;
+    alphaInput.valueAsNumber = data.alpha;
+
     state.points = data.points;
 }
 
