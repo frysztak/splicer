@@ -40,8 +40,19 @@
             </div>
 
             <div class="form-group center-vertical mt-10">
-                <label class="heading" for="copy">Segments:</label>
-                <button class="input-control" id="copy">Copy</button>
+                <label class="" for="alpha">Alpha:</label>
+                <input type="range" class="slider input-control" id="alpha" name="alpha" min="0" max="1" step="0.05"
+                       value="0.5">
+            </div>
+
+            <div class="form-group center-vertical mt-10">
+                <button class="input-control w-50" id="copyJSON">Copy JSON</button>
+                <button class="input-control w-50 ml-10" id="copyTS">Copy TypeScript</button>
+            </div>
+
+            <div class="form-group center-vertical mt-10">
+                <button class="input-control w-50" id="import">Import settings</button>
+                <button class="input-control w-50 ml-10" id="export">Export settings</button>
             </div>
 
             <div class="row center-vertical mt-10">
