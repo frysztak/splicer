@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "file-saver": "^2.0.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "ts-interface-checker": "^0.1.9"
   }
 }
